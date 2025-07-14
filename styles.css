@@ -1,20 +1,24 @@
 :root {
-    /* Dark Theme */
     --bg: #000000;
     --surface: #1c1c1e;
     --text: rgba(255, 255, 255, 0.92);
     --text-secondary: rgba(255, 255, 255, 0.6);
     --accent: #0a84ff;
+    --accent-light: #5da9ff;
     --separator: rgba(255, 255, 255, 0.16);
+    --success: #4CAF50;
+    --error: #FF4444;
     --radius: 14px;
+    --radius-sm: 8px;
 }
 
 [data-theme="light"] {
     --bg: #ffffff;
-    --surface: #f2f2f7;
+    --surface: rgba(231, 231, 231, 0.467);
     --text: rgba(0, 0, 0, 0.92);
     --text-secondary: rgba(0, 0, 0, 0.6);
     --separator: rgba(0, 0, 0, 0.12);
+    --accent-light: #4d9fff;
 }
 
 * {
@@ -23,12 +27,6 @@
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
 }
-
-@-webkit-viewport { width: device-width; }
-@-moz-viewport { width: device-width; }
-@-ms-viewport { width: device-width; }
-@-o-viewport { width: device-width; }
-@viewport { width: device-width; }
 
 html {
     -webkit-text-size-adjust: 100%;
@@ -45,6 +43,7 @@ body {
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    padding-bottom: 2rem;
 }
 
 .container {
@@ -61,9 +60,31 @@ body {
     margin-bottom: 1rem;
 }
 
+.header-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
 .app-title {
     font-size: 1.2rem;
     font-weight: 600;
+}
+
+.icon-button {
+    background: var(--surface);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.icon-button:hover {
+    transform: scale(1.08);
 }
 
 .theme-toggle {
@@ -85,10 +106,33 @@ body {
     padding: 1.5rem;
     margin-bottom: 1rem;
     border: 0.5px solid var(--separator);
+    position: relative;
+}
+
+.verse-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.favorite-btn {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+}
+
+.favorite-btn.active {
+    color: var(--error);
+}
+
+.reference-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
 }
 
 .arabic-text {
-    font-family: 'Noto Naskh Arabic', serif;
+    font-family: 'Noto Naskh Arabic', 'Arial', 'Tahoma', serif;
     font-size: clamp(1.8rem, 6vw, 2.4rem);
     line-height: 2.2;
     direction: rtl;
@@ -98,14 +142,22 @@ body {
     text-rendering: optimizeLegibility;
     letter-spacing: -0.3px;
     word-spacing: -2px;
+    margin-bottom: 1.5rem;
 }
 
-
 .translation-text {
-    color: var(--text-secondary);
+    color: var(--text);
     line-height: 1.6;
     padding: 1rem 0;
     border-top: 0.5px solid var(--separator);
+    margin-bottom: 1rem;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
 }
 
 .ios-button {
@@ -116,37 +168,89 @@ body {
     border-radius: var(--radius);
     width: 100%;
     font-weight: 500;
-    margin: 1rem 0;
     cursor: pointer;
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .ios-button:active {
     opacity: 0.8;
 }
 
-.history-section {
+.secondary {
+    background: var(--surface) !important;
+    color: var(--text-secondary) !important;
+}
+
+.history-section, .favorites-section {
+    margin-top: 1rem;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.history-section.visible, .favorites-section.visible {
+    max-height: 1000px;
+    opacity: 1;
     margin-top: 2rem;
 }
 
-.history-title {
+.history-title, .favorites-title {
     font-size: 1rem;
     color: var(--text-secondary);
     margin-bottom: 0.5rem;
 }
 
-.history-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+.history-list, .favorites-list {
+    display: grid;
+    gap: 1rem;
+    max-height: 600px;
+    overflow-y: auto;
 }
 
-.history-item {
+.history-item, .favorite-item {
     background: var(--surface);
     padding: 1rem;
     border-radius: var(--radius);
     border: 0.5px solid var(--separator);
+    animation: slideIn 0.3s ease;
+    position: relative;
+}
+
+.history-header, .favorite-header {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    align-items: center;
+}
+
+.history-index, .favorite-index {
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.history-arabic, .favorite-arabic {
+    font-family: 'Noto Naskh Arabic', 'Arial', 'Tahoma', serif;
+    font-size: 1.4rem;
+    text-align: right;
+    direction: rtl;
+    margin: 0.5rem 0;
+}
+
+.history-translation, .favorite-translation {
+    color: var(--text-secondary);
     font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.fonts-loaded .arabic-text {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s ease;
 }
 
 .loading-overlay {
@@ -172,71 +276,95 @@ body {
     animation: spin 1s linear infinite;
 }
 
-.secondary {
-    background: var(--surface) !important;
-    color: var(--text-secondary) !important;
-    margin-top: 0.5rem !important;
+/* Audio Player Styles */
+.audio-player {
+    margin-top: 1.5rem;
+    border-top: 0.5px solid var(--separator);
+    padding-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 
-.history-section {
-    margin-top: 1rem;
-    max-height: 0;
+.audio-control {
+    background: var(--accent);
+    color: white;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.progress-container {
+    flex: 1;
+    height: 4px;
+    background: var(--separator);
+    border-radius: 2px;
     overflow: hidden;
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
 }
 
-.history-section.visible {
-    max-height: 1000px;
-    opacity: 1;
-    margin-top: 2rem;
+.progress-bar {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    border-radius: 2px;
+    transition: width 0.1s linear;
 }
 
-.history-header {
+.time-display {
+    min-width: 40px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100px;
+}
+
+.volume-control i {
+    color: var(--text-secondary);
+}
+
+.volume-control input {
+    width: 100%;
+    accent-color: var(--accent);
+}
+
+.favorite-item .favorite-actions {
     display: flex;
     gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    align-items: center;
+    margin-top: 0.5rem;
 }
 
-.history-index {
-    color: var(--accent);
-    font-weight: 500;
-}
-
-.history-arabic {
-    font-family: 'Noto Naskh Arabic', serif;
-    font-size: 1.4rem;
-    text-align: right;
-    direction: rtl;
-    margin: 0.5rem 0;
-}
-
-.history-translation {
-    color: var(--text-secondary);
+.favorite-play {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
     font-size: 0.9rem;
-    line-height: 1.4;
+    cursor: pointer;
+    min-height: 36px;
 }
 
-.history-list {
-    display: grid;
-    gap: 1rem;
-    max-height: 600px;
-    overflow-y: auto;
-}
-
-.history-item {
-    background: var(--surface);
-    padding: 1rem;
-    border-radius: var(--radius);
-    border: 0.5px solid var(--separator);
-    animation: slideIn 0.3s ease;
-}
-
-.fonts-loaded .arabic-text {
-    visibility: visible;
-    opacity: 1;
-    transition: opacity 0.3s ease;
+.favorite-remove {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--separator);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    cursor: pointer;
+    min-height: 36px;
 }
 
 @keyframes slideIn {
@@ -248,6 +376,17 @@ body {
     to { transform: rotate(360deg); }
 }
 
+@keyframes slideUp {
+    from { transform: translate(-50%, 100%); }
+    to { transform: translate(-50%, 0); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
 @media (max-width: 600px) {
     .arabic-text {
         font-size: 1.8rem;
@@ -256,6 +395,44 @@ body {
     .container {
         padding: 0.5rem;
     }
+    
+    .audio-player {
+        flex-wrap: wrap;
+    }
+    
+    .progress-container {
+        order: 3;
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+    
+    .volume-control {
+        width: auto;
+        flex: 1;
+    }
+}
+
+.verse-text, .verse-translation, .verse-reference {
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+}
+.verse-card.loaded .verse-text,
+.verse-card.loaded .verse-translation,
+.verse-card.loaded .verse-reference {
+    opacity: 1;
+}
+
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.audio-control.playing {
+    animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
 .error-notification {
@@ -263,7 +440,7 @@ body {
     bottom: 1rem;
     left: 50%;
     transform: translateX(-50%);
-    background: #ff4444;
+    background: var(--error);
     color: white;
     padding: 0.8rem 1.5rem;
     border-radius: 8px;
@@ -272,13 +449,16 @@ body {
     animation: slideUp 0.3s ease;
 }
 
-@keyframes slideUp {
-    from { transform: translate(-50%, 100%); }
-    to { transform: translate(-50%, 0); }
-}
-
-@font-face {
-    font-family: 'Noto Naskh Arabic Mobile';
-    src: url('https://fonts.gstatic.com/s/notonaskharabic/v18/RrQ5bpV-9Dd1b1OAGA6M9PkyDu3BeMeKNlHdk.ttf');
-    font-display: swap;
+.success-notification {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--success);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    z-index: 1000;
+    animation: slideUp 0.3s ease;
 }
