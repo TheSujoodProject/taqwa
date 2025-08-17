@@ -21,6 +21,18 @@
     --accent-light: #4d9fff;
 }
 
+[data-theme="light"] .settings-content {
+    background: #ffffff;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.icon-button i,
+.theme-toggle i,
+.close-btn i {
+    color: var(--text);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -143,6 +155,24 @@ body {
     letter-spacing: -0.3px;
     word-spacing: -2px;
     margin-bottom: 1.5rem;
+}
+
+.arabic-text.uthmani {
+    font-weight: 600;
+    font-size: clamp(2.2rem, 7vw, 2.8rem);
+}
+
+.arabic-text.simple {
+    font-family: 'Lateef', serif;
+    font-weight: 400;
+    font-size: clamp(2.4rem, 7vw, 3rem);
+    letter-spacing: 1px;
+}
+
+.arabic-text.indopak {
+    font-weight: 700;
+    letter-spacing: -1px;
+    font-size: clamp(2.2rem, 7vw, 2.7rem);
 }
 
 .translation-text {
@@ -276,7 +306,6 @@ body {
     animation: spin 1s linear infinite;
 }
 
-/* Audio Player Styles */
 .audio-player {
     margin-top: 1.5rem;
     border-top: 0.5px solid var(--separator);
@@ -367,6 +396,270 @@ body {
     min-height: 36px;
 }
 
+.settings-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.settings-modal.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.settings-content {
+    background: var(--surface);
+    border-radius: 20px;
+    padding: 1.5rem;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+}
+
+.settings-modal.active .settings-content {
+    transform: scale(1);
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--separator);
+}
+
+.settings-header h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(90deg);
+}
+
+.settings-tabs {
+    display: flex;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 0.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.tab {
+    flex: 1;
+    text-align: center;
+    padding: 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    color: var(--text-secondary);
+}
+
+.tab.active {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 4px 10px rgba(10, 132, 255, 0.3);
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.setting-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.option-card {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.option-card:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.option-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.option-card:hover:before {
+    transform: scaleX(1);
+}
+
+.option-card.selected {
+    border-color: var(--accent);
+    background: rgba(10, 132, 255, 0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.option-card.selected:before {
+    transform: scaleX(1);
+}
+
+.option-card.selected .option-icon {
+    color: var(--accent);
+    transform: scale(1.1);
+}
+
+.option-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.option-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.settings-actions {
+    display: flex;
+    margin-top: 1.5rem;
+}
+
+.save-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(10, 132, 255, 0.4);
+}
+
+.save-btn:hover {
+    background: var(--accent-light);
+    transform: translateY(-3px);
+    box-shadow: 0 7px 20px rgba(10, 132, 255, 0.6);
+}
+
+.font-preview {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    border: 1px dashed var(--separator);
+}
+
+.preview-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.arabic-preview {
+    font-family: 'Noto Naskh Arabic', serif;
+    font-size: 2.2rem;
+    text-align: center;
+    direction: rtl;
+    line-height: 1.8;
+    padding: 1.5rem;
+    background: var(--bg);
+    border-radius: 16px;
+    border: 1px solid var(--separator);
+    transition: all 0.5s ease;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.arabic-preview.uthmani {
+    font-weight: 600;
+    font-size: 2.4rem;
+}
+
+.arabic-preview.simple {
+    font-family: 'Lateef', serif;
+    font-weight: 400;
+    font-size: 2.6rem;
+    letter-spacing: 1px;
+}
+
+.arabic-preview.indopak {
+    font-weight: 700;
+    letter-spacing: -1px;
+    font-size: 2.3rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes slideIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
@@ -388,27 +681,82 @@ body {
 }
 
 @media (max-width: 600px) {
-    .arabic-text {
-        font-size: 1.8rem;
-    }
-    
     .container {
         padding: 0.5rem;
     }
-    
+
+    .arabic-text {
+        font-size: 1.8rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
     .audio-player {
         flex-wrap: wrap;
     }
-    
+
     .progress-container {
         order: 3;
         width: 100%;
         margin-top: 0.5rem;
     }
-    
+
     .volume-control {
         width: auto;
         flex: 1;
+    }
+
+    .settings-content {
+        width: 95%;
+        padding: 1rem;
+    }
+
+    .setting-options {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+
+    .option-card {
+        padding: 0.75rem;
+    }
+
+    .option-icon {
+        font-size: 1.5rem;
+    }
+
+    .option-label {
+        font-size: 0.8rem;
+    }
+
+    .arabic-preview {
+        font-size: 1.8rem;
+        padding: 1rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 720px;
+    }
+
+    .action-buttons {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .settings-content {
+        max-width: 700px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        max-width: 960px;
+    }
+
+    .settings-content {
+        max-width: 800px;
     }
 }
 
@@ -416,6 +764,7 @@ body {
     opacity: 0;
     transition: opacity 0.5s ease-in;
 }
+
 .verse-card.loaded .verse-text,
 .verse-card.loaded .verse-translation,
 .verse-card.loaded .verse-reference {
@@ -428,11 +777,6 @@ body {
 
 .audio-control.playing {
     animation: pulse 1.5s infinite;
-}
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
 }
 
 .error-notification {
