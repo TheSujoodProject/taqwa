@@ -7,10 +7,11 @@
         style-src 'self' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
         font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
         script-src 'self';
-        media-src 'self' https://cdn.islamic.network;
-        connect-src 'self' https://api.alquran.cloud;
+        media-src 'self' https://cdn.islamic.network https://api.alquran.cloud;
+        connect-src 'self' https://api.alquran.cloud https://cdn.islamic.network;
     ">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lateef:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="src/css/styles.css">
 </head>
@@ -19,7 +20,10 @@
         <div class="header">
             <div class="app-title">Taqwa | Sujood</div>
             <div class="header-actions">
-                <button class="theme-toggle icon-button" id="theme-toggle">
+                <button class="icon-button" id="settings-btn">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button class="icon-button" id="theme-toggle">
                     <i class="fas fa-moon"></i>
                 </button>
             </div>
@@ -75,8 +79,125 @@
         <div class="loading-overlay" id="loader">
             <div class="activity-indicator"></div>
         </div>
+
+        <div class="settings-modal" id="settings-modal">
+            <div class="settings-content">
+                <div class="settings-header">
+                    <h3>App Settings</h3>
+                    <button class="close-btn" id="close-settings">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="settings-tabs">
+                    <div class="tab active" data-tab="recitation">Recitation</div>
+                    <div class="tab" data-tab="script">Arabic Script</div>
+                    <div class="tab" data-tab="translation">Translation</div>
+                </div>
+                
+                <div class="tab-content active" id="recitation-tab">
+                    <div class="setting-options">
+                        <div class="option-card" data-value="ar.alafasy">
+                            <div class="option-icon">
+                                <i class="fas fa-microphone"></i>
+                            </div>
+                            <div class="option-label">Mishary Alafasy</div>
+                        </div>
+                        <div class="option-card" data-value="ar.abdulsamad">
+                            <div class="option-icon">
+                                <i class="fas fa-microphone"></i>
+                            </div>
+                            <div class="option-label">Abdul Rahman Al-Sudais</div>
+                        </div>
+                        <div class="option-card" data-value="ar.husary">
+                            <div class="option-icon">
+                                <i class="fas fa-microphone"></i>
+                            </div>
+                            <div class="option-label">Mahmoud Al-Husary</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="script-tab">
+                    <div class="setting-options">
+                        <div class="option-card" data-value="ar.uthmani">
+                            <div class="option-icon">
+                                <i class="fas fa-font"></i>
+                            </div>
+                            <div class="option-label">Uthmani</div>
+                        </div>
+                        <div class="option-card" data-value="ar.simple">
+                            <div class="option-icon">
+                                <i class="fas fa-font"></i>
+                            </div>
+                            <div class="option-label">Simple</div>
+                        </div>
+                        <div class="option-card" data-value="ar.indopak">
+                            <div class="option-icon">
+                                <i class="fas fa-font"></i>
+                            </div>
+                            <div class="option-label">Indo-Pak</div>
+                        </div>
+                    </div>
+                    
+                    <div class="font-preview">
+                        <div class="preview-label">Preview:</div>
+                        <div class="arabic-preview" id="arabic-preview">
+                            بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="translation-tab">
+                    <div class="setting-options">
+                        <div class="option-card" data-value="en.sahih">
+                            <div class="option-icon">
+                                <i class="fas fa-language"></i>
+                            </div>
+                            <div class="option-label">English</div>
+                        </div>
+                        <div class="option-card" data-value="ur.maududi">
+                            <div class="option-icon">
+                                <i class="fas fa-language"></i>
+                            </div>
+                            <div class="option-label">Urdu</div>
+                        </div>
+                        <div class="option-card" data-value="fr.hamidullah">
+                            <div class="option-icon">
+                                <i class="fas fa-language"></i>
+                            </div>
+                            <div class="option-label">French</div>
+                        </div>
+                        <div class="option-card" data-value="es.cortes">
+                            <div class="option-icon">
+                                <i class="fas fa-language"></i>
+                            </div>
+                            <div class="option-label">Spanish</div>
+                        </div>
+                        <div class="option-card" data-value="tr.yazir">
+                            <div class="option-icon">
+                                <i class="fas fa-language"></i>
+                            </div>
+                            <div class="option-label">Turkish</div>
+                        </div>
+                        <div class="option-card" data-value="de.bubenheim">
+                            <div class="option-icon">
+                                <i class="fas fa-language"></i>
+                            </div>
+                            <div class="option-label">German</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="settings-actions">
+                    <button class="save-btn" id="save-settings">
+                        <i class="fas fa-check"></i> Apply Changes
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <script src="src/js/script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
