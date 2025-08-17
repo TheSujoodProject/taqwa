@@ -242,7 +242,6 @@ class Taqwa {
             'progress-bar', 'current-time', 'volume-slider', 'settings-btn',
             'settings-modal', 'close-settings', 'save-settings'
         ];
-        
         elements.forEach(id => {
             this.dom[id.replace('-', '')] = document.getElementById(id);
         });
